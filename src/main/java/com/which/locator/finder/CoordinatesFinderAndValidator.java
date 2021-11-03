@@ -1,6 +1,9 @@
 package com.which.locator.finder;
 
 import java.util.List;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +18,9 @@ public class CoordinatesFinderAndValidator {
 
 	@Autowired
 	LocationValidationService locationValidationService;
+	
+	private static final Logger logger = LogManager.getLogger(CoordinatesFinderAndValidator.class);
+
 	
 	/**
 	 * CoordinatesFinderAndValidator finds the exact Coordinates and validates
@@ -79,11 +85,17 @@ public class CoordinatesFinderAndValidator {
 				break;
 			}
 		}
+		logger.info("########## found the correct cocrdinates for location ########");
+		
 		// this line of code validates the result against locations forensic API
 		LocationValidation locationValidation = locationValidationService.validateResult(x, y, email);
 
+		logger.info("########## validated coordinates using location API ########");
+		
 		// create response object
 		Locationinfo locationInfo = getLocationInfo(x, y, direction, locationValidation);
+		
+		logger.info("########## response populated ########");
 		return locationInfo;
 	}
 
